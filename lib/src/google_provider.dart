@@ -81,7 +81,7 @@ class GoogleProvider implements OAuthProvider {
       }
 
       return OAuthProfile(
-        providerId: data["id"] ?? "unknown",
+        providerId: ProviderId.google,
         email: data["email"],
         name: data["name"],
         avatar: data["picture"],

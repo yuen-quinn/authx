@@ -6,7 +6,7 @@ class AuthX {
   static AuthX? _instance;
   static bool _configured = false;
   
-  final Map<String, OAuthProvider> _providers = {};
+  final Map<ProviderId, OAuthProvider> _providers = {};
   final Map<String, DateTime> _states = {};
   final Duration expiration;
 
@@ -34,7 +34,8 @@ class AuthX {
     
     if (providers != null) {
       for (final entry in providers.entries) {
-        _instance!._providers[entry.key] = entry.value;
+        final providerId = ProviderId.fromString(entry.key);
+        _instance!._providers[providerId] = entry.value;
       }
     }
     
@@ -58,13 +59,13 @@ class AuthX {
   }
 
   // Register third-party OAuth provider
-  void registerProvider(String id, OAuthProvider provider) {
+  void registerProvider(ProviderId id, OAuthProvider provider) {
     _ensureConfigured();
     _providers[id] = provider;
   }
 
   // Generate authorization URL with state parameter
-  Uri getAuthorizationUrl(String providerId) {
+  Uri getAuthorizationUrl(ProviderId providerId) {
     _ensureConfigured();
     final provider = _providers[providerId]!;
     final state = generateState();
@@ -98,7 +99,7 @@ class AuthX {
 
   // Handle callback and return OAuthProfile
   Future<OAuthProfile> handleCallback({
-    required String providerId,
+    required ProviderId providerId,
     required Map<String, String> query,
   }) async {
     _ensureConfigured();
@@ -136,7 +137,7 @@ class AuthX {
       final provider = _providers[providerId];
       if (provider == null) {
         throw DartAuthException(
-          message: "Provider '$providerId' is not registered",
+          message: "Provider '${providerId.value}' is not registered",
           code: "PROVIDER_NOT_FOUND",
         );
       }
