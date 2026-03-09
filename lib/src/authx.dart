@@ -67,7 +67,13 @@ class AuthX {
   // Generate authorization URL with state parameter
   Uri getAuthorizationUrl(Provider providerId) {
     _ensureConfigured();
-    final provider = _providers[providerId]!;
+    final provider = _providers[providerId];
+    if (provider == null) {
+      throw DartAuthException(
+        message: "Provider '${providerId.value}' is not registered",
+        code: "PROVIDER_NOT_FOUND",
+      );
+    }
     final state = generateState();
 
     // Save state with configurable expiration
