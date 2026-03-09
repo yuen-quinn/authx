@@ -6,7 +6,7 @@ class AuthX {
   static AuthX? _instance;
   static bool _configured = false;
   
-  final Map<ProviderId, OAuthProvider> _providers = {};
+  final Map<Provider, OAuthProvider> _providers = {};
   final Map<String, DateTime> _states = {};
   final Duration expiration;
 
@@ -34,7 +34,7 @@ class AuthX {
     
     if (providers != null) {
       for (final entry in providers.entries) {
-        final providerId = ProviderId.fromString(entry.key);
+        final providerId = Provider.fromString(entry.key);
         _instance!._providers[providerId] = entry.value;
       }
     }
@@ -59,13 +59,13 @@ class AuthX {
   }
 
   // Register third-party OAuth provider
-  void registerProvider(ProviderId id, OAuthProvider provider) {
+  void registerProvider(Provider id, OAuthProvider provider) {
     _ensureConfigured();
     _providers[id] = provider;
   }
 
   // Generate authorization URL with state parameter
-  Uri getAuthorizationUrl(ProviderId providerId) {
+  Uri getAuthorizationUrl(Provider providerId) {
     _ensureConfigured();
     final provider = _providers[providerId]!;
     final state = generateState();
@@ -99,7 +99,7 @@ class AuthX {
 
   // Handle callback and return OAuthProfile
   Future<OAuthProfile> handleCallback({
-    required ProviderId providerId,
+    required Provider providerId,
     required Map<String, String> query,
   }) async {
     _ensureConfigured();

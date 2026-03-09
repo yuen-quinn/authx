@@ -1,22 +1,22 @@
-enum ProviderId {
+enum Provider {
   github,
   google;
   
   String get value {
     switch (this) {
-      case ProviderId.github:
+      case Provider.github:
         return 'github';
-      case ProviderId.google:
+      case Provider.google:
         return 'google';
     }
   }
   
-  static ProviderId fromString(String value) {
+  static Provider fromString(String value) {
     switch (value.toLowerCase()) {
       case 'github':
-        return ProviderId.github;
+        return Provider.github;
       case 'google':
-        return ProviderId.google;
+        return Provider.google;
       default:
         throw ArgumentError('Unknown provider: $value');
     }
@@ -24,7 +24,7 @@ enum ProviderId {
 }
 
 class OAuthProfile {
-  final ProviderId providerId;
+  final String providerId;
   final String email;
   final String? name;
   final String? avatar;

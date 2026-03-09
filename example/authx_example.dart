@@ -18,7 +18,7 @@ void main() async {
   final authX = AuthX.instance;
 
   // 3. Get authorization URL (redirect user to this URL)
-  final authUrl = authX.getAuthorizationUrl(ProviderId.github);
+  final authUrl = authX.getAuthorizationUrl(Provider.github);
   print('Redirect user to: $authUrl');
 
   // Extract state from the URL for demonstration
@@ -35,7 +35,7 @@ void main() async {
   try {
     // IMPORTANT: The state must be the SAME as generated in step 3
     final profile = await authX.handleCallback(
-      providerId: ProviderId.github,
+      providerId: Provider.github,
       query: {
         'code': 'test_authorization_code_123',
         'state': stateFromUrl!,  // Use the state from getAuthorizationUrl()

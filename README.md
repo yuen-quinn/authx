@@ -5,9 +5,9 @@ A simple and flexible authentication library for Dart applications supporting mu
 ## Features
 
 - 🔐 OAuth 2.0 authentication
-- 🌐 Multiple provider support (GitHub, Google, and more)
+- 🌐 Multiple provider support (GitHub, Google)
 - 📦 Easy integration with singleton pattern
-- 🎯 Type-safe API with ProviderId enum
+- 🎯 Type-safe API with Provider enum
 - 🔄 State management with configurable expiration
 - 🛡️ Built-in error handling and validation
 
@@ -22,7 +22,7 @@ Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  authx: ^1.0.0
+  authx: ^1.0.2
 ```
 
 Then run:
@@ -58,13 +58,13 @@ void main() async {
   final authX = AuthX.instance;
 
   // 3. Get authorization URL (redirect user to this URL)
-  final authUrl = authX.getAuthorizationUrl(ProviderId.github);
+  final authUrl = authX.getAuthorizationUrl(Provider.github);
   print('Redirect user to: $authUrl');
 
   // 4. Handle callback and get user profile
   try {
     final profile = await authX.handleCallback(
-      providerId: ProviderId.github,
+      providerId: Provider.github,
       query: {
         'code': 'authorization_code_from_callback',
         'state': 'state_from_auth_url',
@@ -85,17 +85,17 @@ void main() async {
 
 ## API Reference
 
-### ProviderId Enum
+### Provider Enum
 
 Type-safe provider identification:
 
 ```dart
-enum ProviderId {
+enum Provider {
   github,
   google;
   
   String get value; // Returns string representation
-  static ProviderId fromString(String value); // Convert string to enum
+  static Provider fromString(String value); // Convert string to enum
 }
 ```
 
@@ -115,9 +115,9 @@ AuthX.configure({
 #### Methods
 
 - `AuthX.instance` - Get singleton instance
-- `getAuthorizationUrl(ProviderId providerId)` - Generate auth URL with state
-- `handleCallback({ProviderId providerId, Map<String, String> query})` - Process callback
-- `registerProvider(ProviderId id, OAuthProvider provider)` - Register additional provider
+- `getAuthorizationUrl(Provider providerId)` - Generate auth URL with state
+- `handleCallback({Provider providerId, Map<String, String> query})` - Process callback
+- `registerProvider(Provider id, OAuthProvider provider)` - Register additional provider
 - `isStateValid(String state)` - Validate state without consuming it
 - `cleanStates()` - Remove expired states
 
@@ -127,12 +127,12 @@ User profile returned after successful authentication:
 
 ```dart
 class OAuthProfile {
-  final ProviderId providerId;     // Enum-based provider identification
-  final String email;             // User email (always present)
-  final String? name;             // User display name
-  final String? avatar;           // Profile avatar URL
-  final String? provider;         // Provider name as string
-  final Map<String, dynamic> raw; // Raw provider response
+  final String providerId;          // Provider ID as string
+  final String email;               // User email (always present)
+  final String? name;               // User display name
+  final String? avatar;             // Profile avatar URL
+  final String? provider;           // Provider name as string
+  final Map<String, dynamic> raw;   // Raw provider response
 }
 ```
 
@@ -216,12 +216,12 @@ final authX = AuthX.instance;
 
 // Register additional providers after configuration
 authX.registerProvider(
-  ProviderId.github,
+  Provider.github,
   GitHubProvider(/* config */),
 );
 
 authX.registerProvider(
-  ProviderId.google,
+  Provider.google,
   GoogleProvider(/* config */),
 );
 ```
@@ -240,8 +240,6 @@ AuthX.reset();
 See the [example](example/) directory for complete working examples:
 
 - [Basic OAuth Flow](example/authx_example.dart) - Complete authentication example
-- [Error Handling](example/error_handling_example.dart) - Comprehensive error scenarios
-- [Multi-Provider Setup](example/multi_provider_example.dart) - Multiple provider configuration
 
 ## Security Considerations
 
@@ -262,12 +260,3 @@ See the [example](example/) directory for complete working examples:
 ## License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Changelog
-
-### v1.0.0
-- Initial release with GitHub and Google OAuth providers
-- Type-safe ProviderId enum
-- Singleton pattern with state management
-- Comprehensive error handling
-- Complete documentation and examples

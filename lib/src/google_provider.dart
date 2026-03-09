@@ -59,7 +59,7 @@ class GoogleProvider implements OAuthProvider {
       final accessToken = tokenData["access_token"];
 
       final profileRes = await http.get(
-        Uri.parse("https://www.googleapis.com/oauth2/v2/userinfo"),
+        Uri.parse("https://www.googleapis.com/oauth2/v3/userinfo"),
         headers: {"Authorization": "Bearer $accessToken"},
       );
 
@@ -81,7 +81,7 @@ class GoogleProvider implements OAuthProvider {
       }
 
       return OAuthProfile(
-        providerId: ProviderId.google,
+        providerId: data["sub"],
         email: data["email"],
         name: data["name"],
         avatar: data["picture"],
